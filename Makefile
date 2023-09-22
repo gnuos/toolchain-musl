@@ -1,12 +1,11 @@
-TAG := $(shell gitmeta image tag)
+TAG := latest
 
 COMMON_ARGS = --progress=plain
 COMMON_ARGS += --frontend=dockerfile.v0
 COMMON_ARGS += --local context=.
 COMMON_ARGS += --local dockerfile=.
-COMMON_ARGS += --opt build-arg:TOOLCHAIN_IMAGE=$(TOOLCHAIN_IMAGE)
 
-BUILDKIT_HOST ?= tcp://0.0.0.0:1234
+BUILDKIT_HOST ?= docker-container://buildkitd
 
 all: toolchain
 
@@ -14,7 +13,7 @@ all: toolchain
 core:
 	@buildctl --addr $(BUILDKIT_HOST) \
 		build \
-		--output type=docker,dest=$@.tar,name=docker.io/autonomy/$@:$(TAG) \
+		--output type=docker,dest=tars/$@.tar,name=daos/$@:$(TAG) \
 		--opt target=$@ \
 		$(COMMON_ARGS)
 
@@ -22,7 +21,7 @@ core:
 base:
 	@buildctl --addr $(BUILDKIT_HOST) \
 		build \
-		--output type=docker,dest=$@.tar,name=docker.io/autonomy/$@:$(TAG) \
+		--output type=docker,dest=tars/$@.tar,name=daos/$@:$(TAG) \
 		--opt target=$@ \
 		$(COMMON_ARGS)
 
@@ -30,7 +29,7 @@ base:
 extras:
 	@buildctl --addr $(BUILDKIT_HOST) \
 		build \
-		--output type=docker,dest=$@.tar,name=docker.io/autonomy/$@:$(TAG) \
+		--output type=docker,dest=tars/$@.tar,name=daos/$@:$(TAG) \
 		--opt target=$@ \
 		$(COMMON_ARGS)
 
@@ -38,7 +37,7 @@ extras:
 golang:
 	@buildctl --addr $(BUILDKIT_HOST) \
 		build \
-		--output type=docker,dest=$@.tar,name=docker.io/autonomy/$@:$(TAG) \
+		--output type=docker,dest=tars/$@.tar,name=daos/$@:$(TAG) \
 		--opt target=$@ \
 		$(COMMON_ARGS)
 
@@ -46,62 +45,47 @@ golang:
 protoc:
 	@buildctl --addr $(BUILDKIT_HOST) \
 		build \
-		--output type=docker,dest=$@.tar,name=docker.io/autonomy/$@:$(TAG) \
+		--output type=docker,dest=tars/$@.tar,name=daos/$@:$(TAG) \
 		--opt target=$@ \
 		$(COMMON_ARGS)
 
 .PHONY: images
 images:
-	@source ./versions.sh && ./rootfs/base/kubernetes-images.sh
+	@source ./versions.sh
 
 .PHONY: toolchain
 toolchain:
 	@buildctl --addr $(BUILDKIT_HOST) \
 		build \
-		--output type=docker,dest=$@.tar,name=docker.io/autonomy/$@:$(TAG) \
+		--output type=docker,dest=tars/$@.tar,name=daos/$@:$(TAG) \
 		--opt target=$@ \
 		$(COMMON_ARGS)
-	@docker load < $@.tar
+	@docker load < tars/$@.tar
 
 .PHONY: common-base
 common-base:
 	@buildctl --addr $(BUILDKIT_HOST) \
 		build \
-		--output type=docker,dest=$@.tar,name=docker.io/autonomy/$@:$(TAG) \
+		--output type=docker,dest=$@.tar,name=daos/$@:$(TAG) \
 		--opt target=$@ \
 		$(COMMON_ARGS)
-	@docker load < $@.tar
+	@docker load < tars/$@.tar
 
 .PHONY: rootfs-base
 rootfs-base:
 	@buildctl --addr $(BUILDKIT_HOST) \
 		build \
-		--output type=docker,dest=$@.tar,name=docker.io/autonomy/$@:$(TAG) \
+		--output type=docker,dest=$@.tar,name=daos/$@:$(TAG) \
 		--opt target=$@ \
 		$(COMMON_ARGS)
-	@docker load < $@.tar
+	@docker load < tars/$@.tar
 
 .PHONY: initramfs-base
 initramfs-base:
 	@buildctl --addr $(BUILDKIT_HOST) \
 		build \
-		--output type=docker,dest=$@.tar,name=docker.io/autonomy/$@:$(TAG) \
+		--output type=docker,dest=$@.tar,name=daos/$@:$(TAG) \
 		--opt target=$@ \
 		$(COMMON_ARGS)
-	@docker load < $@.tar
+	@docker load < tars/$@.tar
 
-.PHONY: login
-login:
-	@docker login --username "$(DOCKER_USERNAME)" --password "$(DOCKER_PASSWORD)"
-
-.PHONY: push
-push:
-	@docker tag autonomy/toolchain:$(TAG) autonomy/toolchain:latest
-	@docker push autonomy/toolchain:$(TAG)
-	@docker push autonomy/toolchain:latest
-	@docker tag autonomy/rootfs-base:$(TAG) autonomy/rootfs-base:latest
-	@docker push autonomy/rootfs-base:$(TAG)
-	@docker push autonomy/rootfs-base:latest
-	@docker tag autonomy/initramfs-base:$(TAG) autonomy/initramfs-base:latest
-	@docker push autonomy/initramfs-base:$(TAG)
-	@docker push autonomy/initramfs-base:latest

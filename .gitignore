@@ -5,9 +5,8 @@ vendor
 .vscode
 
 bin
-alpine/tars
-alpine/linux
-alpine/*64
+alpine/*64/**
+alpine/tars/**
 
 tars/*
 

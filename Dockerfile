@@ -1,8 +1,8 @@
-# syntax=docker/dockerfile:experimental
+# syntax=docker/dockerfile:1
 
 # The common stage provides...
 
-FROM alpine:3.8 AS common
+FROM --platform=$BUILDPLATFORM alpine-base:latest AS common
 ENV ARCH x86_64
 ENV VENDOR talos
 ENV HOST x86_64-linux-musl
@@ -15,8 +15,9 @@ RUN apk --no-cache add bash bison build-base bzip2 coreutils curl diffutils find
 RUN mkdir -p ${SYSROOT}${TOOLCHAIN}
 RUN ln -sv ${SYSROOT}${TOOLCHAIN} ${TOOLCHAIN}
 RUN [ "ln", "-svf", "/bin/bash", "/bin/sh" ]
-COPY build.sh /bin
-COPY versions.sh /bin
+
+COPY utils/build.sh /bin
+COPY common/versions.sh /bin
 COPY common/version-check.sh /bin
 RUN version-check.sh
 
@@ -164,7 +165,6 @@ COPY extras/pkg-config.sh .
 RUN build.sh /src/extras/pkg-config.sh
 # argp-standalone
 COPY extras/argp-standalone.sh .
-COPY extras/patches/argp-standalone-1.3-musl-fix-inline.patch .
 RUN build.sh /src/extras/argp-standalone.sh
 # fts-standalone
 COPY extras/fts-standalone.sh .
@@ -172,15 +172,9 @@ RUN build.sh /src/extras/fts-standalone.sh
 # obstack-standalone
 COPY extras/obstack-standalone.sh .
 RUN build.sh /src/extras/obstack-standalone.sh
+
 # elfutils
 COPY extras/elfutils.sh .
-COPY extras/patches/elfutils-0.173-fix-uninitialized.patch .
-COPY extras/patches/elfutils-0.173-musl-cdefs.patch .
-COPY extras/patches/elfutils-0.173-musl-fts-obstack.patch .
-COPY extras/patches/elfutils-0.173-musl-macros.patch .
-COPY extras/patches/elfutils-0.173-musl-qsort_r.patch .
-COPY extras/patches/elfutils-0.173-musl-strerror_r.patch .
-COPY extras/patches/elfutils-0.173-musl-strndupa.patch .
 RUN build.sh /src/extras/elfutils.sh
 # bc
 COPY extras/bc.sh .
@@ -221,7 +215,6 @@ COPY protoc/checksums.* .
 WORKDIR /src/protoc
 # protoc
 COPY protoc/protoc.sh .
-COPY protoc/patches/musl-fix.patch .
 RUN build.sh /src/protoc/protoc.sh
 # protoc-gen-go
 COPY protoc/protoc-gen-go.sh .
@@ -308,12 +301,6 @@ RUN build.sh /src/base/runc.sh
 # CNI
 COPY rootfs/base/cni.sh .
 RUN build.sh /src/base/cni.sh
-# crictl
-COPY rootfs/base/crictl.sh .
-RUN build.sh /src/base/crictl.sh
-# kubeadm
-COPY rootfs/base/kubeadm.sh .
-RUN build.sh /src/base/kubeadm.sh
 # eudev
 COPY rootfs/base/eudev.sh .
 RUN build.sh /src/base/eudev.sh
@@ -325,6 +312,7 @@ RUN ./cleanup.sh /rootfs
 # symlink
 COPY rootfs/symlink.sh .
 RUN ./symlink.sh /rootfs
+
 FROM scratch AS rootfs-base
 COPY --from=rootfs-build /rootfs /
 
@@ -334,5 +322,6 @@ FROM common-base AS initramfs-build
 # cleanup
 COPY rootfs/cleanup.sh .
 RUN ./cleanup.sh /rootfs
+
 FROM scratch AS initramfs-base
 COPY --from=initramfs-build /rootfs /

@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download ftp://ftp.astron.com/pub/file/file-${file}.tar.gz
+download http://ftp.astron.com/pub/file/file-${file}.tar.gz
 
 ../configure \
     --prefix=${TOOLCHAIN}

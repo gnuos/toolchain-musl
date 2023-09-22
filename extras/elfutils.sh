@@ -1,19 +1,6 @@
 download https://sourceware.org/ftp/elfutils/${elfutils}/elfutils-${elfutils}.tar.bz2
 
 apk add autoconf automake
-case "${elfutils}" in
-0.173)
-  cd ../
-  patch -Np0 -i /src/extras/elfutils-0.173-fix-uninitialized.patch
-  patch -Np0 -i /src/extras/elfutils-0.173-musl-cdefs.patch
-  patch -Np0 -i /src/extras/elfutils-0.173-musl-fts-obstack.patch
-  patch -Np0 -i /src/extras/elfutils-0.173-musl-macros.patch
-  patch -Np0 -i /src/extras/elfutils-0.173-musl-qsort_r.patch
-  patch -Np0 -i /src/extras/elfutils-0.173-musl-strerror_r.patch
-  patch -Np0 -i /src/extras/elfutils-0.173-musl-strndupa.patch
-  autoreconf -if
-  cd -
-esac
 
 cat > ../src/error.h <<-EOF
 	#ifndef _ERROR_H_

@@ -45,6 +45,7 @@ m4 --version | head -n1
 make --version | head -n1
 patch --version | head -n1
 echo Perl `perl -V:version`
+# python3 --version
 sed --version | head -n1
 tar --version | head -n1
 makeinfo --version | head -n1
