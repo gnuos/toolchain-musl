@@ -4,6 +4,13 @@ images
 vendor
 .vscode
 
+bin
+alpine/tars
+alpine/linux
+alpine/*64
+
+tars/*
+
 # vim Swap
 [._]*.s[a-v][a-z]
 [._]*.sw[a-p]
@@ -12,3 +19,5 @@ vendor
 [._]sw[a-p]
 
 *.tar
+*.tar.*z
+

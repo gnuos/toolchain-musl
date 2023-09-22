@@ -3,18 +3,15 @@ name: default
 
 services:
 - name: docker
-  image: docker:dind
+  image: docker:stable-dind
   privileged: true
   volumes:
   - name: dockersock
     path: /var/run
 
 steps:
-- name: conform
-  image: autonomy/conform:c539351
-
 - name: build
-  image: autonomy/build-container:latest
+  image: rootfs-build:latest
   pull: always
   environment:
     BUILDKIT_HOST: tcp://buildkitd.ci.svc:1234
@@ -26,28 +23,6 @@ steps:
   volumes:
   - name: dockersock
     path: /var/run
-
-- name: push
-  image: autonomy/build-container:latest
-  pull: always
-  environment:
-    DOCKER_USERNAME:
-      from_secret: docker_username
-    DOCKER_PASSWORD:
-      from_secret: docker_password
-  commands:
-  - make login
-  - make push
-  volumes:
-  - name: dockersock
-    path: /var/run
-  when:
-    branch:
-    - master
-    event:
-    - push
-  depends_on:
-  - build
 
 volumes:
 - name: dockersock
