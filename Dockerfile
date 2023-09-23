@@ -1,17 +1,46 @@
 # syntax=docker/dockerfile:1
 
-# The common stage provides...
+# alpine linux from scratch
+FROM --platform=$BUILDPLATFORM scratch AS minimal
+ARG ARCH
+ARG VERSION
 
-FROM --platform=$BUILDPLATFORM alpine-base:latest AS common
+ADD alpine/tars/$VERSION/$ARCH/alpine.tar.gz /
+
+# add container timezone package
+FROM scratch AS tz
+COPY --from=minimal / /
+ENV PATH=/usr/sbin:/usr/bin:/sbin:/bin
+RUN apk add tzdata --no-cache && rm -rf /var/cache/apk/*
+
+# setup base alpine image
+FROM minimal AS alpine-base
+ARG ALPINE_VERSION
+ARG BUILD_DATE
+ARG VERSION
+
+COPY --from=tz /usr/share/zoneinfo/PRC /etc/localtime
+
+# Fix certificate issues when setting to use the https repositories
+RUN apk add ca-certificates --no-cache && rm -rf /var/cache/apk/*
+# Upgrade the repository URLs to HTTPS
+RUN printf \
+    "https://dl-cdn.alpinelinux.org/alpine/v%s/main\nhttps://dl-cdn.alpinelinux.org/alpine/v%s/community" \
+    $VERSION $VERSION > /etc/apk/repositories && \
+    apk upgrade --available --no-cache && rm -rf /var/cache/apk/*
+
+# The common stage provides...
+FROM alpine-base AS common
 ENV ARCH x86_64
-ENV VENDOR talos
+ENV VENDOR daos
 ENV HOST x86_64-linux-musl
 ENV BUILD x86_64-linux-musl
 ENV TARGET ${ARCH}-${VENDOR}-linux-musl
 ENV SYSROOT /${VENDOR}
 ENV TOOLCHAIN /toolchain
 ENV PATH ${TOOLCHAIN}/bin:$PATH
-RUN apk --no-cache add bash bison build-base bzip2 coreutils curl diffutils findutils gawk grep gzip patch perl tar texinfo xz
+RUN apk --no-cache add autoconf automake bash bison build-base bzip2 coreutils curl \
+    diffutils findutils gawk grep gzip patch perl tar texinfo xz
 RUN mkdir -p ${SYSROOT}${TOOLCHAIN}
 RUN ln -sv ${SYSROOT}${TOOLCHAIN} ${TOOLCHAIN}
 RUN [ "ln", "-svf", "/bin/bash", "/bin/sh" ]
@@ -163,15 +192,6 @@ RUN build.sh /src/extras/libtool.sh
 # pkg-config
 COPY extras/pkg-config.sh .
 RUN build.sh /src/extras/pkg-config.sh
-# argp-standalone
-COPY extras/argp-standalone.sh .
-RUN build.sh /src/extras/argp-standalone.sh
-# fts-standalone
-COPY extras/fts-standalone.sh .
-RUN build.sh /src/extras/fts-standalone.sh
-# obstack-standalone
-COPY extras/obstack-standalone.sh .
-RUN build.sh /src/extras/obstack-standalone.sh
 
 # elfutils
 COPY extras/elfutils.sh .
@@ -225,8 +245,8 @@ RUN build.sh /src/protoc/protoc-gen-go.sh
 FROM scratch AS toolchain
 ENV PATH /toolchain/bin
 COPY --from=protoc /talos/toolchain /toolchain
-COPY build.sh /toolchain/bin
-COPY versions.sh /toolchain/bin
+COPY utils/build.sh /toolchain/bin
+COPY common/versions.sh /toolchain/bin
 SHELL [ "/toolchain/bin/bash", "-c" ]
 RUN mkdir /bin
 RUN mkdir /tmp

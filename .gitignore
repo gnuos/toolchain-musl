@@ -20,3 +20,6 @@ tars/*
 *.tar
 *.tar.*z
 
+*.log
+*.pid
+
