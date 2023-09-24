@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/coreutils/coreutils-${coreutils}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/coreutils/coreutils-${coreutils}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN} \

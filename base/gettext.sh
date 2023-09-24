@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/gettext/gettext-${gettext}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/gettext/gettext-${gettext}.tar.xz"
 
 EMACS="no" ../gettext-tools/configure --prefix=${TOOLCHAIN} --disable-shared
 make -C gnulib-lib -j $(nproc)

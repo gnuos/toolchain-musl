@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/gzip/gzip-${gzip}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/gzip/gzip-${gzip}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

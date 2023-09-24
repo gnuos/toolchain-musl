@@ -1,4 +1,4 @@
-download https://ftp.gnu.org/gnu/binutils/binutils-${binutils}.tar.xz
+download http://ftpmirror.gnu.org/gnu/binutils/binutils-${binutils}.tar.xz
 
 ../configure \
     --build=${HOST} \

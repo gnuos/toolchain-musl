@@ -1,4 +1,4 @@
-download https://pkg-config.freedesktop.org/releases/pkg-config-${pkgConfig}.tar.gz
+download "https://pkg-config.freedesktop.org/releases/pkg-config-${pkgConfig}.tar.gz"
 ../configure \
     --prefix=${TOOLCHAIN} \
     --with-internal-glib \

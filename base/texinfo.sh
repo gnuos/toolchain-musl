@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/texinfo/texinfo-${texinfo}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/texinfo/texinfo-${texinfo}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

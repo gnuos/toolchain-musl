@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://downloads.sourceforge.net/expect/expect${expect}.tar.gz
+download "https://udomain.dl.sourceforge.net/project/expect/Expect/${expect}/expect${expect}.tar.gz"
 
 cp -v ../configure{,.orig}
 sed 's:/usr/local/bin:/bin:' ../configure.orig > ../configure

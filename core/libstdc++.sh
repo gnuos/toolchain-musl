@@ -1,6 +1,6 @@
 exportcross
 
-download https://ftp.gnu.org/gnu/gcc/gcc-${gcc}/gcc-${gcc}.tar.xz
+download http://ftpmirror.gnu.org/gnu/gcc/gcc-${gcc}/gcc-${gcc}.tar.xz
 
 ../libstdc++-v3/configure \
     --build=${HOST} \

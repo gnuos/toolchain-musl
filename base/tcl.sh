@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://sourceforge.net/projects/tcl/files/Tcl/${tcl}/tcl-core${tcl}-src.tar.gz
+download "https://udomain.dl.sourceforge.net/project/tcl/Tcl/${tcl}/tcl-core${tcl}-src.tar.gz"
 
 ../unix/configure --prefix=${TOOLCHAIN}
 make -j $(nproc)

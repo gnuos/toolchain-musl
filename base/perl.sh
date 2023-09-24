@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://www.cpan.org/src/5.0/perl-${perl}.tar.xz
+download "https://www.cpan.org/src/5.0/perl-${perl}.tar.xz"
 
 cd ../
 

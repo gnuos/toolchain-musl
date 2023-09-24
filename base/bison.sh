@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/bison/bison-${bison}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/bison/bison-${bison}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN} \

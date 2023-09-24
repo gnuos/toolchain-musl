@@ -42,7 +42,7 @@ download() {
 
     BASE=${1##*/}
 
-    curl --retry 5 --retry-delay 0 --retry-max-time 45 -L -o "${BASE}" ${1}
+    curl --parallel --retry 5 --retry-delay 1 --retry-max-time 45 -L -o "${BASE}" ${1}
 
     for checksum in sha256 sha512; do
       grep -F "${BASE}" /src/checksums.${checksum} | ${checksum}sum -c

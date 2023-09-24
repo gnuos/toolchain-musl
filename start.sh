@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -o errexit
 set -o pipefail
 
 DIR=$(cd `dirname $0`; pwd)
@@ -7,11 +8,11 @@ DIR=$(cd `dirname $0`; pwd)
 machine=$(uname -m)
 
 export PATH=${DIR}/bin:$PATH
-export BUILDKIT_HOST=docker-container://buildkitd
 
 source common/versions.sh
 
 buildkit_cmd=$(which buildctl)
+buildkit_exe=$(which buildkitd)
 alpine_image=$(docker image ls --format '{{.Repository}}' --filter "reference=alpine-base:latest")
 
 get_buildkit() {
@@ -31,7 +32,13 @@ get_buildkit() {
 }
 
 start_buildkitd() {
-    docker run -d --name buildkitd --privileged moby/buildkit:latest
+    pushd "$DIR/daemon"
+    sh start-stop-daemon.sh
+    mv -fv "$DIR/daemon/start-stop-daemon" "$DIR/bin"
+    popd
+
+    start-stop-daemon --name buildkitd --pidfile "$DIR/daemon/buildkitd.pid" --exec "${buildkit_exe}" --chdir "$DIR" \
+        --make-pidfile --remove-pidfile --output "$DIR/daemon/buildkitd.log" --background --start
 }
 
 main() {
@@ -41,9 +48,9 @@ main() {
 	echo
     fi
 
-    if docker container ls -a --format '{{.Image}}' --filter "name=/buildkitd" | grep 'moby/buildkit' > /dev/null 2>&1; then
-        buildctl --version
-
+    if buildctl du 2>/dev/null; then
+        buildctl prune
+        buildctl prune-histories
 	echo
     else
         start_buildkitd
@@ -56,6 +63,10 @@ main() {
     fi
 
     make
+    make rootfs-base
+    make initramfs-base
+
+     start-stop-daemon --name buildkitd --pidfile "$DIR/daemon/buildkitd.pid" --stop
 }
 
 main

@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/bash/bash-${bash}.tar.gz
+download "http://ftpmirror.gnu.org/gnu/bash/bash-${bash}.tar.gz"
 
 ../configure \
     --prefix=${TOOLCHAIN} \

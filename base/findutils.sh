@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/findutils/findutils-${findutils}.tar.gz
+download "http://ftpmirror.gnu.org/gnu/findutils/findutils-${findutils}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

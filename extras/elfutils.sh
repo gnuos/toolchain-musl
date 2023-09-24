@@ -1,6 +1,8 @@
-download https://sourceware.org/ftp/elfutils/${elfutils}/elfutils-${elfutils}.tar.bz2
+#!/bin/bash
 
-apk add autoconf automake
+set -eo pipefail
+
+download "https://sourceware.org/ftp/elfutils/${elfutils}/elfutils-${elfutils}.tar.bz2"
 
 cat > ../src/error.h <<-EOF
 	#ifndef _ERROR_H_

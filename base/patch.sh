@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/patch/patch-${patch}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/patch/patch-${patch}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

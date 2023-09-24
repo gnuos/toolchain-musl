@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/sed/sed-${sed}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/sed/sed-${sed}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

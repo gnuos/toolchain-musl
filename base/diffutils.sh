@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/diffutils/diffutils-${diffutils}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/diffutils/diffutils-${diffutils}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

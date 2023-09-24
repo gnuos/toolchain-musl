@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/grep/grep-${grep}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/grep/grep-${grep}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

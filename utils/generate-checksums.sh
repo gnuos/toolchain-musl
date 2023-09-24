@@ -6,24 +6,26 @@ if [ "$#" -ne 1 ]; then
     echo "Please pass stage name"
 fi
 
-source versions.sh
+source common/versions.sh
 
 stage="$1"
 
-urls=`grep -h 'download ' "${stage}"/*.sh | awk '$2 ~ /^-/ { print $3; next } { print $2 }' | sort | uniq | envsubst`
+urls=(
+    $(grep -h 'download ' "${stage}"/*.sh | awk '$2 ~ /^-/ { print $3; next } { print $2 }' | sort | uniq | envsubst)
+)
 
 stage_dir="${PWD}/${stage}"
 
-TMP=$(mktemp -d)
+TMP=tars
 cd $TMP
 
-for url in ${urls}; do
-  wget -c -L $url
+for url in ${urls[@]}; do
+    wget --verbose -c -L "${url//\"/}"
 done
 
 for checksum in sha256 sha512; do
-  ${checksum}sum * > "${stage_dir}/checksums.${checksum}"
+    ${checksum}sum * > "${stage_dir}/checksums.${checksum}"
 done
 
-rm -rf $TMP
+rm -rf $TMP/*
 

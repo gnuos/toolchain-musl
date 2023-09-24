@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/ncurses/ncurses-${ncurses}.tar.gz
+download "http://ftpmirror.gnu.org/gnu/ncurses/ncurses-${ncurses}.tar.gz"
 
 sed -i s/mawk// ../configure
 

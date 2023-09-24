@@ -1,4 +1,4 @@
-download https://ftp.gnu.org/gnu/cpio/cpio-${cpio}.tar.gz
+download "http://ftpmirror.gnu.org/gnu/cpio/cpio-${cpio}.tar.gz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

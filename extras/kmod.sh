@@ -1,4 +1,4 @@
-download https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-${kmod}.tar.xz
+download "https://cdn.kernel.org/pub/linux/utils/kernel/kmod/kmod-${kmod}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

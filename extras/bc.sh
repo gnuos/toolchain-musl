@@ -1,4 +1,4 @@
-download https://ftp.gnu.org/gnu/bc/bc-${bc}.tar.gz
+download "http://ftpmirror.gnu.org/gnu/bc/bc-${bc}.tar.gz"
 
 export LD_LIBRARY_PATH=${TOOLCHAIN}/lib
 

@@ -1,6 +1,6 @@
 export LD_LIBRARY_PATH=${TOOLCHAIN}/lib
 
-download https://curl.haxx.se/download/curl-${curl}.tar.xz
+download "https://curl.haxx.se/download/curl-${curl}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN} \

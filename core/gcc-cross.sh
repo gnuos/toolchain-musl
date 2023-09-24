@@ -1,7 +1,7 @@
-download https://ftp.gnu.org/gnu/mpfr/mpfr-${mpfr}.tar.xz mpfr
-download https://ftp.gnu.org/gnu/gmp/gmp-${gmp}.tar.xz gmp
-download https://ftp.gnu.org/gnu/mpc/mpc-${mpc}.tar.gz mpc
-download https://ftp.gnu.org/gnu/gcc/gcc-${gcc}/gcc-${gcc}.tar.xz
+download http://ftpmirror.gnu.org/gnu/mpfr/mpfr-${mpfr}.tar.xz mpfr
+download http://ftpmirror.gnu.org/gnu/gmp/gmp-${gmp}.tar.xz gmp
+download http://ftpmirror.gnu.org/gnu/mpc/mpc-${mpc}.tar.gz mpc
+download http://ftpmirror.gnu.org/gnu/gcc/gcc-${gcc}/gcc-${gcc}.tar.xz
 
 for file in ../gcc/config/{linux,i386/linux{,64}}.h; do
   cp -uv $file{,.orig}

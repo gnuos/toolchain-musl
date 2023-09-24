@@ -1,9 +1,9 @@
 exportcross
 
-download https://ftp.gnu.org/gnu/mpfr/mpfr-${mpfr}.tar.xz mpfr
-download https://ftp.gnu.org/gnu/gmp/gmp-${gmp}.tar.xz gmp
-download https://ftp.gnu.org/gnu/mpc/mpc-${mpc}.tar.gz mpc
-download https://ftp.gnu.org/gnu/gcc/gcc-${gcc}/gcc-${gcc}.tar.xz
+download http://ftpmirror.gnu.org/gnu/mpfr/mpfr-${mpfr}.tar.xz mpfr
+download http://ftpmirror.gnu.org/gnu/gmp/gmp-${gmp}.tar.xz gmp
+download http://ftpmirror.gnu.org/gnu/mpc/mpc-${mpc}.tar.gz mpc
+download http://ftpmirror.gnu.org/gnu/gcc/gcc-${gcc}/gcc-${gcc}.tar.xz
 
 cat ../gcc/limitx.h ../gcc/glimits.h ../gcc/limity.h > `dirname $(${TARGET}-gcc -print-libgcc-file-name)`/include-fixed/limits.h
 

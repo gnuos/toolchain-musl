@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/gawk/gawk-${gawk}.tar.xz
+download "http://ftpmirror.gnu.org/gnu/gawk/gawk-${gawk}.tar.xz"
 
 ../configure \
     --prefix=${TOOLCHAIN}

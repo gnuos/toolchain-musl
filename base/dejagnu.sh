@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-download https://ftp.gnu.org/gnu/dejagnu/dejagnu-${dejagnu}.tar.gz
+download "http://ftpmirror.gnu.org/gnu/dejagnu/dejagnu-${dejagnu}.tar.gz"
 
 ../configure \
     --prefix=${TOOLCHAIN}
